@@ -1,0 +1,51 @@
+@dp.message_handler(commands=['lang'])
+async def choosLang(message: types.Message):
+  await message.reply('Tilni commandalar orqali tanlang\n/languzen - uzbekcha ingilizcha\n/languzru - uzbekcha ruscha')
+
+
+""""""""""""""""""""""""""""""""""""""""""'''Choos lang'''""""""
+
+@dp.message_handler(commands='languzen')
+async def translete(message: types.Message):
+  file = open(f"{message.from_user.id}.txt", "w")
+  file.write('UZ - EN')
+  file.close()
+  await message.reply('🇺🇿UZ - 🇬🇧EN tili tanlandi')
+
+
+
+@dp.message_handler(commands='languzru')
+async def translete(message: types.Message):
+  file1 = open(f"{message.from_user.id}.txt", "w")
+  file1.write('UZ - RU')
+  file1.close()
+  await message.reply('🇺🇿UZ - 🇷🇺RU tili tanlandi')
+
+
+
+@dp.message_handler(content_types='text')
+async def translete(message: types.Message):
+
+  if await functions.check_on_start(message.chat.id):
+    lang = translatorg.detect(message.text).lang
+    file2 = open(f"{message.from_user.id}.txt", "r+")
+    til = file2.read()
+    if til == 'UZ - EN':
+      if lang == 'uz':
+        translator = GoogleTranslator(source='uz', target='en')
+        await message.reply(translator.translate(message.text))
+      else:
+        translator = GoogleTranslator(source='auto', target='uz')
+        await message.reply(translator.translate(message.text))
+    elif til == 'UZ - RU':
+      if lang == 'uz':
+        translator = GoogleTranslator(source='uz', target='ru')
+        await message.reply(translator.translate(message.text))
+      else:
+        translator = GoogleTranslator(source='auto', target='uz')
+        await message.reply(translator.translate(message.text))
+    else:
+      await message.reply('Tilni tanlang /lang')
+  else:
+    await message.reply(
+      f'Assalomu alaykum {message.from_user.first_name}\nBotimizdan foydalanish uchun kanalimizga azo bo`ing👇👇', reply_markup=join_inline)
